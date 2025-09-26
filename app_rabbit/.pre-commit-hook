@@ -1,0 +1,21 @@
+#!/bin/bash
+# Pre-commit hook to check for accidentally committed secrets
+
+echo "🔍 Checking for potential secrets..."
+
+# Check for common API key patterns
+if git diff --cached --name-only | xargs grep -l "PIXABAY_API.*[0-9a-fA-F]\{20,\}" 2>/dev/null; then
+    echo "❌ ERROR: Potential API key found in staged files!"
+    echo "Please remove any hardcoded API keys from your code."
+    exit 1
+fi
+
+# Check for .env files
+if git diff --cached --name-only | grep -E "\.env$|\.env\."; then
+    echo "❌ ERROR: .env file detected in staged changes!"
+    echo "Please ensure .env files are in .gitignore and not committed."
+    exit 1
+fi
+
+echo "✅ No secrets detected in staged files."
+exit 0
