@@ -20,9 +20,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Image Search App',
+      title: 'VisualFlow - AI Image Discovery',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF6366F1), // Indigo as primary
+          brightness: Brightness.light,
+        ),
         useMaterial3: true,
       ),
       home: const ImageSearchScreen(),
@@ -44,6 +47,7 @@ class _ImageSearchScreenState extends State<ImageSearchScreen> {
   int _currentPage = 1;
   String _currentQuery = '';
   bool _isAnalyzingImage = false;
+  final GlobalKey<DebouncedSearchFieldState> _searchFieldKey = GlobalKey<DebouncedSearchFieldState>();
 
   @override
   void initState() {
@@ -184,86 +188,96 @@ class _ImageSearchScreenState extends State<ImageSearchScreen> {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
             colors: [
-              colorScheme.primary.withValues(alpha: 0.05),
+              const Color(0xFF6366F1).withValues(alpha: 0.08),
+              const Color(0xFF8B5CF6).withValues(alpha: 0.05),
               colorScheme.surface,
-              colorScheme.secondary.withValues(alpha: 0.02),
+              const Color(0xFFEC4899).withValues(alpha: 0.03),
             ],
-            stops: const [0.0, 0.3, 1.0],
+            stops: const [0.0, 0.3, 0.7, 1.0],
           ),
         ),
         child: SafeArea(
           child: Column(
             children: [
-              // Custom App Bar
+              // Custom App Bar with Enhanced Branding
               Container(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
                 child: Row(
                   children: [
+                    // Enhanced Logo with 3D effect
                     Container(
-                      padding: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                           colors: [
-                            colorScheme.primary,
-                            colorScheme.secondary,
+                            const Color(0xFF6366F1), // Indigo
+                            const Color(0xFF8B5CF6), // Purple
+                            const Color(0xFFEC4899), // Pink
                           ],
+                          stops: const [0.0, 0.5, 1.0],
                         ),
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
-                            color: colorScheme.primary.withValues(alpha: 0.3),
+                            color: const Color(0xFF6366F1).withValues(alpha: 0.4),
+                            blurRadius: 12,
+                            offset: const Offset(0, 6),
+                          ),
+                          BoxShadow(
+                            color: const Color(0xFFEC4899).withValues(alpha: 0.2),
                             blurRadius: 8,
-                            offset: const Offset(0, 4),
+                            offset: const Offset(0, 2),
                           ),
                         ],
                       ),
                       child: const Icon(
-                        Icons.photo_library_rounded,
+                        Icons.auto_awesome_rounded,
                         color: Colors.white,
-                        size: 24,
+                        size: 28,
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    const SizedBox(width: 18),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Image Explorer',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: colorScheme.onSurface,
+                          // App Name with Gradient Text
+                          ShaderMask(
+                            shaderCallback: (bounds) => LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                const Color(0xFF6366F1),
+                                const Color(0xFF8B5CF6),
+                                const Color(0xFFEC4899),
+                              ],
+                            ).createShader(bounds),
+                            child: Text(
+                              'VisualFlow',
+                              style: TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.w800,
+                                color: Colors.white,
+                                letterSpacing: -0.5,
+                              ),
                             ),
                           ),
+                          const SizedBox(height: 2),
                           Text(
-                            'Discover amazing visuals',
+                            'AI-Powered Image Discovery',
                             style: TextStyle(
                               fontSize: 14,
-                              color: colorScheme.onSurface.withValues(alpha: 0.6),
-                              fontWeight: FontWeight.w400,
+                              color: colorScheme.onSurface.withValues(alpha: 0.7),
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: 0.2,
                             ),
                           ),
                         ],
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: colorScheme.primary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.refresh_rounded,
-                          color: colorScheme.primary,
-                          size: 24,
-                        ),
-                        onPressed: _loadRandomImages,
-                        tooltip: 'Refresh',
                       ),
                     ),
                   ],
@@ -277,8 +291,9 @@ class _ImageSearchScreenState extends State<ImageSearchScreen> {
                 isLoading: _isAnalyzingImage,
               ),
               
-              // Search Field
+              // Search Field with Debouncing
               DebouncedSearchField(
+                key: _searchFieldKey,
                 hintText: _getFunHintText(),
                 onChanged: _searchImages,
               ),
