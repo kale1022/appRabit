@@ -11,10 +11,12 @@ A single-page Flutter application that allows users to search for images using t
 ## Features
 
 - 🔍 **Search Bar**: Real-time image search with debounce (500ms delay)
+- 📤 **AI Image Upload**: Upload photos and find similar images using Gemini AI (FREE model)
+- 🤖 **Smart Analysis**: AI converts uploaded images into search prompts using free Gemini 2.5 Flash
 - 📱 **Mobile-Friendly Design**: Responsive layout optimized for mobile devices
 - ♾️ **Infinite Scroll**: Automatically loads more images as you scroll
 - 🖼️ **Image Grid**: Beautiful 2-column grid layout with image cards
-- 🎨 **Modern UI**: Clean, Material Design 3 interface
+- 🎨 **Modern UI**: Clean, Material Design 3 interface with animations
 - 🚀 **Performance**: Cached network images for smooth scrolling
 - 🔄 **Random Images**: Load random images when no search query is provided
 
@@ -33,6 +35,8 @@ A single-page Flutter application that allows users to search for images using t
 - **HTTP**: For API requests
 - **Cached Network Image**: For efficient image loading and caching
 - **Pixabay API**: For high-quality image search
+- **Google Generative AI**: For AI-powered image analysis
+- **Image Picker**: For photo uploads from gallery or camera
 
 ## Getting Started
 
@@ -62,16 +66,24 @@ flutter run
 
 ### API Key Setup (Required)
 
-This app requires a Pixabay API key to function. Follow these steps:
+This app requires two API keys to function:
 
-1. Get a free API key from [Pixabay API](https://pixabay.com/api/docs/)
-2. Copy the `.env.example` file to `.env`:
+1. **Pixabay API Key** (for image search):
+   - Get a free API key from [Pixabay API](https://pixabay.com/api/docs/)
+
+2. **Gemini API Key** (for AI image analysis - FREE model):
+   - Get a free API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
+   - We use `gemini-2.5-flash-image-preview` which is completely free
+
+3. Copy the `.env.example` file to `.env`:
    ```bash
    cp .env.example .env
    ```
-3. Edit the `.env` file and replace `your_pixabay_api_key_here` with your actual API key:
+
+4. Edit the `.env` file and add your API keys:
    ```
-   PIXABAY_API=your_actual_api_key_here
+   PIXABAY_API=your_pixabay_api_key_here
+   GEMINI_API_KEY=your_gemini_api_key_here
    ```
 
 **Important**: The `.env` file is gitignored and will not be committed to the repository for security.
