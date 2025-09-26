@@ -173,7 +173,7 @@ class _ImageSearchScreenState extends State<ImageSearchScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: Colors.green,
+        backgroundColor: const Color(0xFF6366F1), // Purple to match app theme
         duration: const Duration(seconds: 3),
       ),
     );
